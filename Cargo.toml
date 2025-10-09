@@ -1,0 +1,12 @@
+[package]
+name = "aos-bootloader"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+aos-uefi = { path = "../aos-uefi" }
+
+[[bin]]
+name = "aos-bootloader"
+test = false
+bench = false
