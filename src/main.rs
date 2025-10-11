@@ -5,11 +5,13 @@
 extern crate alloc;
 extern crate aos_uefi;
 
+mod system;
 mod wrappers;
 
-use alloc::vec;
 use aos_uefi::{Handle, status::Status, system::SystemTable};
 use core::panic::PanicInfo;
+
+use crate::{system::System, wrappers::stdio::Stdout};
 
 static mut SYSTEM_TABLE: *mut SystemTable = 0 as *mut SystemTable;
 
@@ -38,9 +40,15 @@ extern "efiapi" fn efi_main(
 }
 
 fn main() -> Result<(), Status> {
-    let fs = vec![4, 5, 6];
-    for i in fs {
-        println!("{}", i);
+    Stdout.clear_screen()?;
+    let fs = System::get_fs()?;
+    let root = fs.root()?;
+    loop {
+        let entry = match root.next_entry()? {
+            Some(_e) => _e,
+            None => break,
+        };
+        println!("Found entry\n{}", entry);
     }
     println!("I made it here!");
     loop {}

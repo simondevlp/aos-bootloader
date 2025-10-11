@@ -5,7 +5,7 @@ use core::{
 
 use aos_uefi::{memory::MemoryType, status::Status};
 
-use crate::{panic, println, system_table, system_table_mut};
+use crate::{println, system_table, system_table_mut};
 
 struct Allocator;
 
@@ -22,7 +22,7 @@ unsafe impl GlobalAlloc for Allocator {
         }
     }
 
-    unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {
+    unsafe fn dealloc(&self, ptr: *mut u8, _layout: Layout) {
         match unsafe { (system_table().boot_srv.free_pool)(ptr as usize) } {
             Status::SUCCESS => (),
             _s => panic!("Allocator failed here at dealloc... Status {}", _s),

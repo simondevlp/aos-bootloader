@@ -21,9 +21,9 @@ impl System {
         }
     }
 
-    pub fn _get_fs() -> Result<&'static SimpleFileSystem, Status> {
+    pub fn get_fs() -> Result<FileSystem, Status> {
         match Self::get_protocol(&FileSystem::GUID) {
-            Ok(u) => unsafe { Ok(&*(u as *mut SimpleFileSystem)) },
+            Ok(u) => unsafe { Ok(FileSystem::from(&*(u as *mut SimpleFileSystem))) },
             Err(s) => Err(s),
         }
     }
