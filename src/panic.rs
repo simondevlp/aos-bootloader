@@ -1,6 +1,5 @@
 use core::panic::PanicInfo;
-
-use crate::println;
+use std::println;
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {

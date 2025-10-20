@@ -1,41 +1,16 @@
 #![no_std]
 #![no_main]
-#![feature(alloc_error_handler)]
 
-extern crate alloc;
-extern crate aos_uefi;
+extern crate aos_uefi_wrappers as std;
 
 mod panic;
-mod system;
-mod wrappers;
-
-use aos_uefi::{Handle, status::Status, system::SystemTable};
-
-use crate::{system::System, wrappers::stdio::Stdout};
-
-static mut SYSTEM_TABLE: *mut SystemTable = 0 as *mut SystemTable;
-
-pub const unsafe fn system_table() -> &'static SystemTable {
-    unsafe { &*SYSTEM_TABLE }
-}
-
-pub unsafe fn system_table_mut() -> &'static mut SystemTable {
-    unsafe { &mut *SYSTEM_TABLE }
-}
+use std::{status::Status, stdio::Stdout, system::System, *};
 
 #[unsafe(no_mangle)]
-extern "efiapi" fn efi_main(
-    _image_handle: Handle,
-    system_table: &'static mut SystemTable,
-) -> Status {
-    unsafe {
-        SYSTEM_TABLE = &mut *system_table;
-        match main() {
-            Ok(()) => loop {},
-            Err(_s) => {
-                panic!("main failed returning status {}", _s)
-            }
-        }
+extern "C" fn amain() -> Status {
+    match main() {
+        Ok(()) => Status::SUCCESS,
+        Err(_s) => panic!("main failed with status {}", _s),
     }
 }
 
