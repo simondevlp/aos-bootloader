@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-aos-uefi-wrappers = {path = "../aos-uefi-wrappers"}
+aos-uefi-wrappers = {git = "https://github.com/simondevlp/aos-uefi-wrappers.git", branch = "master"}
 
 [[bin]]
 name = "aos-bootloader"
